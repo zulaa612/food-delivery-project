@@ -1,0 +1,92 @@
+"use client";
+
+import { ChevronLeft } from "lucide-react";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+export default function Login() {
+  return (
+    <div className="flex min-h-screen w-full">
+      {/* Зүүн тал: Форм хэсэг */}
+      <div className="flex w-full flex-col justify-center px-8 lg:w-1/2 xl:px-24">
+        <div className="mx-auto w-full max-w-sm space-y-6">
+          {/* Буцах товч */}
+          <div>
+            <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 text-gray-600 transition-colors hover:bg-gray-50">
+              <ChevronLeft size={20} />
+            </button>
+          </div>
+
+          {/* Гарчиг болон тайлбар */}
+          <div className="space-y-1">
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+              Log in
+            </h1>
+            <p className="text-sm text-gray-500">
+              Log in to enjoy your favorite dishes.
+            </p>
+          </div>
+
+
+          
+
+          {/* Форм */}
+          <form className="space-y-4">
+            <div className="space-y-3">
+              <Input
+                type="email"
+                placeholder="Enter your email address"
+                required
+                className="h-11 rounded-md border-gray-200 bg-gray-50/50 px-3.5 text-sm placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-gray-400"
+              />
+              <Input
+                type="password"
+                placeholder="Password"
+                required
+                className="h-11 rounded-md border-gray-200 bg-gray-50/50 px-3.5 text-sm placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-gray-400"
+              />
+            </div>
+
+            {/* Нууц үг мартсан */}
+            <div className="pt-1">
+              <a
+                href="#"
+                className="text-xs font-medium text-gray-600 hover:underline"
+              >
+                Forgot password ?
+              </a>
+            </div>
+
+            {/* Баталгаажуулах товч */}
+            <Button
+              type="submit"
+              className="h-11 w-full rounded-md bg-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-400"
+            >
+              Let's Go
+            </Button>
+          </form>
+
+          {/* Бүртгүүлэх холбоос */}
+          <div className="text-center text-xs text-gray-500">
+            Don't have an account?{" "}
+            <a href="#" className="font-semibold text-blue-600 hover:underline">
+              Sign up
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Баруун тал: Зураг хэсэг */}
+      <div className="relative hidden lg:block lg:w-1/2">
+        <Image
+          src="/delivery-image.jpg" // Өөрийн зургийн замаар солиорой
+          alt="Delivery courier"
+          fill
+          priority
+          className="object-cover"
+        />
+      </div>
+    </div>
+  );
+}
