@@ -15,8 +15,55 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye } from "lucide-react";
 import { EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import  FieldError from "./_components/field-error";
+
+const validate = ({ email, password }) => {
+  const errors = {};
+
+  if (!email) {
+    errors.email = "Email is required.";
+  } else if (!email.includes("@")) {
+    errors.email = "Invalid email. Use a format like example@email.com.";
+  }
+
+  if (!password) {
+    errors.password = "Password is required";
+  } else if (password.length < 6) {
+    errors.password = "Incorrect password. Please try again.";
+  }
+  return errors;
+};
 
 export default function Login() {
+  const router = useRouter();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const errs = validate({
+      email,
+      password,
+    });
+
+    if (Object.keys(errs).length) {
+      setErrors(errs);
+      return;
+    }
+    setErrors({});
+
+    console.log({ email, password });
+  };
+
+  const isDisabled = !email || !password;
+
   return (
     <div className="flex h-screen w-full overflow-hidden">
       {/*Left Form Section Start */}
@@ -33,13 +80,22 @@ export default function Login() {
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
-              <form className=" w-full space-y-4">
+              <form className=" w-full space-y-4" onClick={handleSubmit}>
                 <div className="flex flex-col gap-4">
                   <div>
                     <Input
                       id="email"
                       type="email"
                       placeholder="Enter your email address"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        setErrors((prev) => ({
+                          ...prev,
+                          email: "",
+                        }));
+                      }}
+                      className={errors.email ? "border-red-500" : ""}
                       required
                     />
                   </div>
@@ -48,31 +104,51 @@ export default function Login() {
                       id="password"
                       type="password"
                       placeholder="Password"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        setErrors((prev) => ({
+                          ...prev,
+                          password: "",
+                        }));
+                      }}
+                      className={errors.password ? "border-red-500" : "pr-10"}
                       required
                     />
+
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
                   </div>
+                  <FieldError message={errors.password} />
                   <a href="#" className=" text-sm underline cursor-pointer ">
                     Forgot password?
                   </a>
                 </div>
+                <Button
+                  type="submit"
+                  disabled={isDisabled}
+                  className="w-full bg-gray-300 hover:bg-gray-400 text-white font-medium rounded-md py-2 transition-colors cursor-pointer"
+                >
+                  Let&apos;s Go
+                </Button>
               </form>
             </CardContent>
             <CardFooter className="p-0 mt-6 flex flex-col gap-4">
-              <Button
-                type="submit"
-                className="w-full bg-gray-300 hover:bg-gray-400 text-white font-medium rounded-md py-2 transition-colors cursor-pointer"
-              >
-                Let&apos;s Go
-              </Button>
               <div className="text-center text-gray-500">
                 {" "}
                 Don&apos;t have an account?
-                <a
-                  href="#"
+                <button
+                  type="button"
+                  onClick={() => router.push("/food/src/app/signup")}
                   className="text-blue-500 underline font-semibold ml-3"
                 >
                   Sign up
-                </a>
+                </button>
               </div>
             </CardFooter>
           </Card>
