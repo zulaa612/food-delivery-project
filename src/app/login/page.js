@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronLeft } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,10 +18,10 @@ import { EyeOff } from "lucide-react";
 
 export default function Login() {
   return (
-    <div className="flex min-h-screen w-full items-center">
+    <div className="flex h-screen w-full overflow-hidden">
       {/*Left Form Section Start */}
-      <div className="w-104  ml-25">
-        <div className="space-y-6">
+      <div className="flex flex-1 items-center justify-center p-6">
+        <div className="w-full max-w-sm space-y-6">
           <button className="h-9 w-9 flex justify-center items-center border rounded-lg border-gray-400 transition-colors hover:bg-gray-100 cursor-pointer">
             <ChevronLeft size={16} />
           </button>
@@ -42,7 +43,7 @@ export default function Login() {
                       required
                     />
                   </div>
-                  <div className="gap-2">
+                  <div className="relative gap-2">
                     <Input
                       id="password"
                       type="password"
@@ -80,13 +81,16 @@ export default function Login() {
       {/*Left Form Section End */}
 
       {/*Right Picture Section */}
-      <div className="hidden lg:block w-1/2 p-3">
-        <div
-          className="w-full h-full rounded-2xl bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('file:///C:/Users/Hp/Downloads/Frame%201321316047.png')`,
-          }}
-        ></div>
+      <div className="hidden lg:block w-1/2 h-screen p-3">
+        <div className="relative w-full h-full rounded-2xl overflow-hidden">
+          <Image
+            src="/pic/login.png"
+            alt="Login image"
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
       </div>
     </div>
   );
