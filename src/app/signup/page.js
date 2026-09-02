@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronLeft } from "lucide-react";
-import Image from "next/image"
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Card,

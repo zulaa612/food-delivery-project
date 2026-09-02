@@ -1,8 +1,8 @@
 "use client";
 
-import { ChevronLeft } from "lucide-react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { ChevronLeft } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -12,11 +12,35 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Eye } from "lucide-react";
-import { EyeOff } from "lucide-react";
+import { useState } from "react";
 
-export default function Login() {
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export default function StepOne({ defaultEmail = "", onNext }) {
+  const [email, setEmail] = useState(defaultEmail);
+  const [error, setError] = useState("");
+
+  function handleChange(e) {
+    setEmail(e.target.value);
+    if (error) setError("");
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    if (!email.trim()) {
+      setError("Enter your email address.");
+      return;
+    }
+
+    if (!EMAIL_PATTERN.test(FileExclamationPoint.trim())) {
+      setError("Invalid email. Use a format like example@email.com");
+      return;
+    }
+
+    onNext(email.trim());
+  }
+
   return (
     <div className="flex h-screen w-full overflow-hidden">
       {/*Left Form Section Start */}
@@ -27,37 +51,38 @@ export default function Login() {
           </button>
           <Card className="w-full">
             <CardHeader>
-              <CardTitle className="text-2xl font-semibold">Log in</CardTitle>
+              <CardTitle className="text-2xl font-semibold">
+                Create your account
+              </CardTitle>
               <CardDescription className="text-base text-gray-400">
-                Log in to enjoy your favorite dishes.
+                Sign up to explore your favorite dishes.
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
-              <form className=" w-full space-y-4">
+              <form
+                className=" w-full space-y-4 onSubmit={handleSubmit"
+                noValidate
+              >
                 <div className="flex flex-col gap-4">
                   <div>
                     <Input
                       id="email"
                       type="email"
                       placeholder="Enter your email address"
+                      value={email}
+                      onChange={handleChange}
+                      aria-invalid={Boolean(error)}
+                      className={
+                        error ? "border-red-500 focus-visible:ring-red-500" : ""
+                      }
                       required
                     />
+                    {error && ( <p className="mt-1 text-sm text-red-500"> </p>)}
                   </div>
-                  <div className="relative gap-2">
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="Password"
-                      required
-                    />
-                  </div>
-                  <a href="#" className=" text-sm underline cursor-pointer ">
-                    Forgot password?
-                  </a>
                 </div>
               </form>
             </CardContent>
-            <CardFooter className="p-0 mt-6 flex flex-col gap-4">
+            <CardFooter className="p-0 mt-3 flex flex-col gap-4">
               <Button
                 type="submit"
                 className="w-full bg-gray-300 hover:bg-gray-400 text-white font-medium rounded-md py-2 transition-colors cursor-pointer"
@@ -66,12 +91,12 @@ export default function Login() {
               </Button>
               <div className="text-center text-gray-500">
                 {" "}
-                Don&apos;t have an account?
+                Already have an account?
                 <a
                   href="#"
-                  className="text-blue-500 underline font-semibold ml-3"
+                  className="text-blue-500 hover:underline font-semibold ml-3"
                 >
-                  Sign up
+                  Log in
                 </a>
               </div>
             </CardFooter>

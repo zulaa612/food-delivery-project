@@ -21,7 +21,7 @@ export default function Login() {
     <div className="flex h-screen w-full overflow-hidden">
       {/*Left Form Section Start */}
       <div className="flex flex-1 items-center justify-center p-6">
-        <div className="w-full max-w-sm space-y-6">
+        <div className="w-full max-w-smspace-y-6">
           <button className="h-9 w-9 flex justify-center items-center border rounded-lg border-gray-400 transition-colors hover:bg-gray-100 cursor-pointer">
             <ChevronLeft size={16} />
           </button>

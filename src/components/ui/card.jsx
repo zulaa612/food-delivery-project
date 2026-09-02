@@ -8,8 +8,8 @@ function Card({ className, size = "default", ...props }) {
       data-slot="card"
       data-size={size}
       className={cn(
-        // ring-1 ring-foreground/10 -ийг арилгав
-        "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
+        
+        "group/card flex flex-col gap-(--card-spacing) rounded-xl bg-card py-(--card-spacing) text-sm text-card-foreground [--card-spacing:--spacing(4)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
         className,
       )}
       {...props}
@@ -81,7 +81,7 @@ function CardFooter({ className, ...props }) {
     <div
       data-slot="card-footer"
       className={cn(
-        // border-t болон bg-muted/50 -ийг арилгав
+
         "flex items-center rounded-b-xl p-(--card-spacing)",
         className,
       )}
