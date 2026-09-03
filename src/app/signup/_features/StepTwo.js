@@ -29,7 +29,7 @@ const stepTwoSchema = z
       .regex(/[^a-zA-Z0-9]/, "Weak password. Use numbers and symbols."),
     confirmPassword: z.string(),
   })
-  .refine((data) => data.password === ataResolver.confirmPassword, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: "Those password didn't match, Try again.",
     path: ["confirmPassword"],
   });
@@ -37,7 +37,7 @@ const stepTwoSchema = z
 export default function StepTwo({ email, onBack }) {
   const [passowrd, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
   const {
@@ -102,7 +102,7 @@ export default function StepTwo({ email, onBack }) {
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="Confirm"
-                      {...register("password")}
+                      {...register("confirmPassword")}
                       className={errors.password ? "border-red-500" : ""}
                       required
                     />
@@ -114,13 +114,14 @@ export default function StepTwo({ email, onBack }) {
                       {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                     </button>
                   </div>
-                  <FieldError message={errors.password?.message} />
+                  <FieldError message={errors.confirmPassword?.message} />
                 </div>
               </form>
             </CardContent>
             <CardFooter className="p-0 mt-3 flex flex-col gap-4">
               <Button
                 type="submit"
+                disabled={isSubmitting}
                 className="w-full bg-gray-300 hover:bg-gray-400 text-white font-medium rounded-md py-2 transition-colors cursor-pointer"
               >
                 Let&apos;s Go
