@@ -17,59 +17,45 @@ import { Eye } from "lucide-react";
 import { EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import  FieldError from "./_components/field-error";
+import FieldError from "./_components/field-error";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
-const validate = ({ email, password }) => {
-  const errors = {};
-
-  if (!email) {
-    errors.email = "Email is required.";
-  } else if (!email.includes("@")) {
-    errors.email = "Invalid email. Use a format like example@email.com.";
-  }
-
-  if (!password) {
-    errors.password = "Password is required";
-  } else if (password.length < 6) {
-    errors.password = "Incorrect password. Please try again.";
-  }
-  return errors;
-};
+const loginSchema = z.object({
+  email: z
+    .string()
+    .email("Invalid email. Use a format like example@email.com."),
+  password: z.string().min(6, "Incorrect password. Please try again."),
+});
 
 export default function Login() {
   const router = useRouter();
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    mode: "onChange",
+  });
 
-    const errs = validate({
-      email,
-      password,
-    });
-
-    if (Object.keys(errs).length) {
-      setErrors(errs);
-      return;
-    }
-    setErrors({});
-
-    console.log({ email, password });
+  const onSubmit = (data) => {
+    console.log("data:", data);
   };
-
-  const isDisabled = !email || !password;
 
   return (
     <div className="flex h-screen w-full overflow-hidden">
       {/*Left Form Section Start */}
       <div className="flex flex-1 items-center justify-center p-6">
         <div className="w-full max-w-sm space-y-6">
-          <button className="h-9 w-9 flex justify-center items-center border rounded-lg border-gray-400 transition-colors hover:bg-gray-100 cursor-pointer">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="h-9 w-9 flex justify-center items-center border rounded-lg border-gray-400 transition-colors hover:bg-gray-100 cursor-pointer"
+          >
             <ChevronLeft size={16} />
           </button>
           <Card className="w-full">
@@ -80,42 +66,31 @@ export default function Login() {
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
-              <form className=" w-full space-y-4" onClick={handleSubmit}>
+              <form
+                className=" w-full space-y-4"
+                onClick={handleSubmit(onSubmit)}
+              >
                 <div className="flex flex-col gap-4">
                   <div>
                     <Input
                       id="email"
                       type="email"
                       placeholder="Enter your email address"
-                      value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        setErrors((prev) => ({
-                          ...prev,
-                          email: "",
-                        }));
-                      }}
-                      className={errors.email ? "border-red-500" : ""}
+                      {...register("email")}
+                      className={errors.email ? "border-red-500" : "pr-10"}
                       required
                     />
+                    <FieldError message={errors.email?.message} />
                   </div>
                   <div className="relative gap-2">
                     <Input
                       id="password"
                       type="password"
                       placeholder="Password"
-                      value={password}
-                      onChange={(e) => {
-                        setPassword(e.target.value);
-                        setErrors((prev) => ({
-                          ...prev,
-                          password: "",
-                        }));
-                      }}
+                      {...register("password")}
                       className={errors.password ? "border-red-500" : "pr-10"}
                       required
                     />
-
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
@@ -124,14 +99,13 @@ export default function Login() {
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
-                  <FieldError message={errors.password} />
+                  <FieldError message={errors.password?.message} />
                   <a href="#" className=" text-sm underline cursor-pointer ">
                     Forgot password?
                   </a>
                 </div>
                 <Button
                   type="submit"
-                  disabled={isDisabled}
                   className="w-full bg-gray-300 hover:bg-gray-400 text-white font-medium rounded-md py-2 transition-colors cursor-pointer"
                 >
                   Let&apos;s Go
@@ -145,7 +119,7 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => router.push("/food/src/app/signup")}
-                  className="text-blue-500 underline font-semibold ml-3"
+                  className="text-blue-500 underline font-semibold ml-3 cursor-pointer"
                 >
                   Sign up
                 </button>
