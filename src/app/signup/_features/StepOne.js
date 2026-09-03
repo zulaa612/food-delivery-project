@@ -13,32 +13,37 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import * as z from "zod";
+import FieldError from "@/app/login/_components/field-error";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const stepOneSchema = z.object({
+  email: z.string().email("Invalid email. Use a format like example@email.com"),
+});
 
-export default function StepOne({ defaultEmail = "", onNext }) {
+export default function StepOne({ defaultEmail = "", onBack, onNext }) {
   const [email, setEmail] = useState(defaultEmail);
   const [error, setError] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(stepOneSchema),
+    mode: "onTouched",
+  });
+
+  const onSubmit = (data) => {
+    console.log("data:", data);
+
+    onNext(data.email);
+  };
 
   function handleChange(e) {
     setEmail(e.target.value);
     if (error) setError("");
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    if (!email.trim()) {
-      setError("Enter your email address.");
-      return;
-    }
-
-    if (!EMAIL_PATTERN.test(FileExclamationPoint.trim())) {
-      setError("Invalid email. Use a format like example@email.com");
-      return;
-    }
-
-    onNext(email.trim());
   }
 
   return (
@@ -46,7 +51,10 @@ export default function StepOne({ defaultEmail = "", onNext }) {
       {/*Left Form Section Start */}
       <div className="flex flex-1 items-center justify-center p-6">
         <div className="w-full max-w-sm space-y-6">
-          <button className="h-9 w-9 flex justify-center items-center border rounded-lg border-gray-400 transition-colors hover:bg-gray-100 cursor-pointer">
+          <button
+            onClick={onBack}
+            className="h-9 w-9 flex justify-center items-center border rounded-lg border-gray-400 transition-colors hover:bg-gray-100 cursor-pointer"
+          >
             <ChevronLeft size={16} />
           </button>
           <Card className="w-full">
@@ -62,6 +70,7 @@ export default function StepOne({ defaultEmail = "", onNext }) {
               <form
                 className=" w-full space-y-4 onSubmit={handleSubmit"
                 noValidate
+                onSubmit={handleSubmit(onSubmit)}
               >
                 <div className="flex flex-col gap-4">
                   <div>
@@ -69,31 +78,32 @@ export default function StepOne({ defaultEmail = "", onNext }) {
                       id="email"
                       type="email"
                       placeholder="Enter your email address"
-                      value={email}
-                      onChange={handleChange}
-                      aria-invalid={Boolean(error)}
+                      {...register("email")}
                       className={
-                        error ? "border-red-500 focus-visible:ring-red-500" : ""
+                        errors.email
+                          ? "border-red-500 focus-visible:ring-red-500"
+                          : ""
                       }
                       required
                     />
-                    {error && ( <p className="mt-1 text-sm text-red-500"> </p>)}
+                    <FieldError message={errors.email?.message} />
                   </div>
                 </div>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-gray-300 hover:bg-gray-400 text-white font-medium rounded-md py-2 transition-colors cursor-pointer"
+                >
+                  Let&apos;s Go
+                </Button>
               </form>
             </CardContent>
             <CardFooter className="p-0 mt-3 flex flex-col gap-4">
-              <Button
-                type="submit"
-                className="w-full bg-gray-300 hover:bg-gray-400 text-white font-medium rounded-md py-2 transition-colors cursor-pointer"
-              >
-                Let&apos;s Go
-              </Button>
               <div className="text-center text-gray-500">
                 {" "}
                 Already have an account?
                 <a
-                  href="#"
+                  href="/login"
                   className="text-blue-500 hover:underline font-semibold ml-3"
                 >
                   Log in

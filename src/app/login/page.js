@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
 import { Eye } from "lucide-react";
 import { EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -39,7 +39,7 @@ export default function Login() {
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(loginSchema),
-    mode: "onChange",
+    mode: "onTouched",
   });
 
   const onSubmit = (data) => {
@@ -68,38 +68,44 @@ export default function Login() {
             <CardContent className="p-0">
               <form
                 className=" w-full space-y-4"
-                onClick={handleSubmit(onSubmit)}
+                onSubmit={handleSubmit(onSubmit)}
               >
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-3">
                   <div>
                     <Input
                       id="email"
                       type="email"
                       placeholder="Enter your email address"
                       {...register("email")}
-                      className={errors.email ? "border-red-500" : "pr-10"}
+                      className={errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}
                       required
                     />
                     <FieldError message={errors.email?.message} />
                   </div>
-                  <div className="relative gap-2">
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="Password"
-                      {...register("password")}
-                      className={errors.password ? "border-red-500" : "pr-10"}
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                    >
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
+                  <div className="flex flex-col gap-1">
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type="password"
+                        placeholder="Password"
+                        {...register("password")}
+                        className={errors.password ? "border-red-500" : ""}
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                      >
+                        {showPassword ? (
+                          <EyeOff size={18} />
+                        ) : (
+                          <Eye size={18} />
+                        )}
+                      </button>
+                    </div>
+                    <FieldError message={errors.password?.message} />
                   </div>
-                  <FieldError message={errors.password?.message} />
                   <a href="#" className=" text-sm underline cursor-pointer ">
                     Forgot password?
                   </a>
@@ -112,17 +118,14 @@ export default function Login() {
                 </Button>
               </form>
             </CardContent>
-            <CardFooter className="p-0 mt-6 flex flex-col gap-4">
+            <CardFooter className="p-0 mt-6 flex flex-col gap-4 relative">
               <div className="text-center text-gray-500">
                 {" "}
                 Don&apos;t have an account?
-                <button
-                  type="button"
-                  onClick={() => router.push("/food/src/app/signup")}
-                  className="text-blue-500 underline font-semibold ml-3 cursor-pointer"
-                >
-                  Sign up
-                </button>
+                <a
+                href="/signup"
+                className="text-blue-500 hover:underline font-semibold ml-1"
+                >Sign up</a>
               </div>
             </CardFooter>
           </Card>
