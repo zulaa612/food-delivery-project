@@ -14,11 +14,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import * as z from "zod";
-import FieldError from "@/app/login/_components/field-error";
+import FieldError from "@/app/(auth)/login/_components/field-error";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye } from "lucide-react";
 import { EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const stepTwoSchema = z
   .object({
@@ -34,11 +35,10 @@ const stepTwoSchema = z
     path: ["confirmPassword"],
   });
 
-export default function StepTwo({ email, onBack }) {
-  const [passowrd, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+export default function StepTwo({ email, onBack, onSubmitSignup }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const {
     register,
@@ -49,10 +49,14 @@ export default function StepTwo({ email, onBack }) {
     mode: "onTouched",
   });
 
-  const onSubmit = (data) => {
-    console.log("data:", data);
+  const onSubmit = async (data) => {
+    try {
+      await onSubmitSignup(data);
+      router.push("/login");
+    } catch (err) {
+      console.log("error", error);
+    }
   };
-
   return (
     <div className="flex h-screen w-full overflow-hidden">
       {/*Left Form Section Start */}
@@ -75,14 +79,14 @@ export default function StepTwo({ email, onBack }) {
             </CardHeader>
             <CardContent className="p-0">
               <form
-                className=" w-full space-y-4 onSubmit={handleSubmit"
+                className=" w-full space-y-4 "
                 noValidate
                 onSubmit={handleSubmit(onSubmit)}
               >
                 <div className="flex flex-col gap-4">
                   <div>
                     <Input
-                      id="email"
+                      id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="Password"
                       {...register("password")}
@@ -99,7 +103,7 @@ export default function StepTwo({ email, onBack }) {
                 <div className="flex flex-col gap-1">
                   <div className="relative">
                     <Input
-                      id="password"
+                      id="confirmPassword"
                       type={showPassword ? "text" : "password"}
                       placeholder="Confirm"
                       {...register("confirmPassword")}
@@ -111,32 +115,33 @@ export default function StepTwo({ email, onBack }) {
                       onClick={() => setShowPassword((prev) => !prev)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
                     >
-                      {showPassword ? (<Eye size={18} />) : (<EyeOff size={18} />)}
+                      {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                     </button>
                   </div>
                   <FieldError message={errors.confirmPassword?.message} />
                 </div>
+                <CardFooter className="p-0 mt-3 flex flex-col gap-4">
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-gray-300 hover:bg-gray-400 text-white font-medium rounded-md py-2 transition-colors cursor-pointer"
+                  >
+                    {isSubmitting ? "Submitting..." : "Let's Go"}
+                  </Button>
+
+                  <div className="text-center text-gray-500">
+                    {" "}
+                    Already have an account?
+                    <a
+                      href="/login"
+                      className="text-blue-500 hover:underline font-semibold ml-3"
+                    >
+                      Log in
+                    </a>
+                  </div>
+                </CardFooter>
               </form>
             </CardContent>
-            <CardFooter className="p-0 mt-3 flex flex-col gap-4">
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-gray-300 hover:bg-gray-400 text-white font-medium rounded-md py-2 transition-colors cursor-pointer"
-              >
-                Let&apos;s Go
-              </Button>
-              <div className="text-center text-gray-500">
-                {" "}
-                Already have an account?
-                <a
-                  href="/login"
-                  className="text-blue-500 hover:underline font-semibold ml-3"
-                >
-                  Log in
-                </a>
-              </div>
-            </CardFooter>
           </Card>
         </div>
       </div>

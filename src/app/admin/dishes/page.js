@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Sidebar from "./dishes/features/category-sidebar";
+import Sidebar from "./features/category-sidebar";
 
 export default function Dishes() {
   return (

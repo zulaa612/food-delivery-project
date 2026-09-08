@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Truck } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Settings } from "lucide-react";
 
 export default function Sidebar() {
   return (
@@ -19,20 +20,18 @@ export default function Sidebar() {
       </div>
 
       {/*Buttons*/}
-      <div className="mt-10">
-        <Button
-          variant="outline"
-          className="cursor-pointer bg-white border-none hover:bg-black"
-        >
-          <LayoutDashboard />
+      <div className="mt-10 flex flex-col gap-6">
+        <Button className="w-full justify-start gap-3 rounded-full px-4 py-2 cursor-pointer hover:bg-black hover:text-white">
+          <LayoutDashboard className="w-5 h-5 shrink-0 flex-none" />
           <span>Food Menu</span>
         </Button>
-        <Button
-          variant="outline"
-          className="cursor-pointer bg-white border-none hover:bg-black"
-        >
-          <Truck/>
+        <Button className="w-full justify-start gap-3 rounded-full px-4 py-2 cursor-pointer transition-colors hover:bg-black hover:text-white ">
+          <Truck className="w-5 h-5 shrink-0 flex-none" />
           <span>Orders</span>
+        </Button>
+        <Button className="w-full justify-start gap-3 rounded-full px-4 py-2 cursor-pointer transition-colors hover:bg-black hover:text-white ">
+          <Settings className="w-5 h-5 shrink-0 flex-none" />
+          <span>Settings</span>
         </Button>
       </div>
     </aside>

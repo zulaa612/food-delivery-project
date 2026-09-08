@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import * as z from "zod";
-import FieldError from "@/app/login/_components/field-error";
+import FieldError from "@/app/(auth)/login/_components/field-error";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
