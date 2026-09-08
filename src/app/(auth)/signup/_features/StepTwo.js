@@ -35,9 +35,8 @@ const stepTwoSchema = z
     path: ["confirmPassword"],
   });
 
-export default function StepTwo({ email, onBack, onSubmitSignup }) {
+export default function StepTwo({ email, onBack, handleSubmitSignup }) {
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
   const router = useRouter();
 
   const {
@@ -50,13 +49,17 @@ export default function StepTwo({ email, onBack, onSubmitSignup }) {
   });
 
   const onSubmit = async (data) => {
+    console.log("formdata:", data);
     try {
-      await onSubmitSignup(data);
+      if (handleSubmitSignup) {
+        await handleSubmitSignup(data);
+      }
       router.push("/login");
-    } catch (err) {
-      console.log("error", error);
+    } catch (error) {
+      console.log("error:", error);
     }
   };
+
   return (
     <div className="flex h-screen w-full overflow-hidden">
       {/*Left Form Section Start */}
@@ -107,7 +110,7 @@ export default function StepTwo({ email, onBack, onSubmitSignup }) {
                       type={showPassword ? "text" : "password"}
                       placeholder="Confirm"
                       {...register("confirmPassword")}
-                      className={errors.password ? "border-red-500" : ""}
+                      className={errors.confirmPassword ? "border-red-500" : ""}
                       required
                     />
                     <button

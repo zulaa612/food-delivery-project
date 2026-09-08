@@ -17,7 +17,7 @@ export default function Signup() {
   const handleBack = async (data) => {
     setStep(1);
   };
-  const handleSubmitSingup = async (data) => {
+  const handleSubmitSignup = async (data) => {
     try {
       const response = await server.post("/auth/signup", {
         email: email,
@@ -26,8 +26,10 @@ export default function Signup() {
 
       localStorage.setItem("user", JSON.stringify(response.data));
       console.log("response:", response.data);
+      return response.data;
     } catch (err) {
       console.log("error:", err);
+      throw err;
     }
   };
 
@@ -44,7 +46,7 @@ export default function Signup() {
         <StepTwo
           email={email}
           onBack={handleBack}
-          onSubmitSignup={handleSubmitSingup}
+          handleSubmitSignup={handleSubmitSignup}
         />
       )}
     </>
