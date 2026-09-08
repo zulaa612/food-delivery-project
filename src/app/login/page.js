@@ -77,7 +77,11 @@ export default function Login() {
                       type="email"
                       placeholder="Enter your email address"
                       {...register("email")}
-                      className={errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}
+                      className={
+                        errors.email
+                          ? "border-red-500 focus-visible:ring-red-500"
+                          : ""
+                      }
                       required
                     />
                     <FieldError message={errors.email?.message} />
@@ -86,7 +90,7 @@ export default function Login() {
                     <div className="relative">
                       <Input
                         id="password"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         placeholder="Password"
                         {...register("password")}
                         className={errors.password ? "border-red-500" : ""}
@@ -98,15 +102,18 @@ export default function Login() {
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
                       >
                         {showPassword ? (
-                          <EyeOff size={18} />
-                        ) : (
                           <Eye size={18} />
+                        ) : (
+                          <EyeOff size={18} />
                         )}
                       </button>
                     </div>
                     <FieldError message={errors.password?.message} />
                   </div>
-                  <a href="#" className=" text-sm underline cursor-pointer ">
+                  <a
+                    href="/login-form"
+                    className=" text-sm underline cursor-pointer "
+                  >
                     Forgot password?
                   </a>
                 </div>
@@ -123,9 +130,11 @@ export default function Login() {
                 {" "}
                 Don&apos;t have an account?
                 <a
-                href="/signup"
-                className="text-blue-500 hover:underline font-semibold ml-1"
-                >Sign up</a>
+                  href="/signup"
+                  className="text-blue-500 hover:underline font-semibold ml-1"
+                >
+                  Sign up
+                </a>
               </div>
             </CardFooter>
           </Card>

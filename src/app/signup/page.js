@@ -26,12 +26,7 @@ export default function Signup() {
         />
       )}
 
-      {step === 2 && (
-        <StepTwo
-        email={email}
-        onBack={handleBack}
-        />
-      )}
+      {step === 2 && <StepTwo email={email} onBack={handleBack} />}
     </>
   );
 }
