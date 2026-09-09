@@ -35,7 +35,7 @@ const stepTwoSchema = z
     path: ["confirmPassword"],
   });
 
-export default function StepTwo({ email, onBack, handleSubmitSignup }) {
+export default function StepTwo({ onBack, handleSubmitSignup }) {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
@@ -127,7 +127,7 @@ export default function StepTwo({ email, onBack, handleSubmitSignup }) {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-gray-300 hover:bg-gray-400 text-white font-medium rounded-md py-2 transition-colors cursor-pointer"
+                    className="w-full bg-black hover:bg-gray-400 text-white font-medium rounded-md py-2 transition-colors cursor-pointer"
                   >
                     {isSubmitting ? "Submitting..." : "Let's Go"}
                   </Button>
