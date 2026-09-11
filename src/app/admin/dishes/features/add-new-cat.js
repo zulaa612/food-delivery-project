@@ -9,6 +9,9 @@ import { server } from "@/app/_api/api";
 import { X, Plus } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { Check } from "lucide-react";
+import { Trash } from "lucide-react";
 
 export default function AddNewCat({ fetchCategories }) {
   const [addNewCategory, setAddNewCategory] = useState(false);
@@ -28,6 +31,13 @@ export default function AddNewCat({ fetchCategories }) {
       if (fetchCategories) {
         await fetchCategories();
       }
+
+      toast.custom(() => (
+        <div className="flex items-center gap-2 bg-gray-900 text-white px-4 py-3 rounded-lg shadow-lg text-sm font-medium border border-gray-800">
+          <Check className="w-4 h-4 text-white" />
+          <span>New Category is being added to the menu</span>
+        </div>
+      ));
     } catch (err) {
       console.log("error:", err);
     }
