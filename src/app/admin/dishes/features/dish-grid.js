@@ -17,7 +17,7 @@ export default function DishGrid({
       : categories.filter((category) => category._id === selectedCat);
 
   return (
-    <div className="px-6 mt-6 flex flex-col gap-5">
+    <div className="space-y-6">
       {filteredCategories.map((category) => (
         <div
           key={category._id}
