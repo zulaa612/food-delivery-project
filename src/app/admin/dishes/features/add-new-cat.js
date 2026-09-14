@@ -11,7 +11,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Check } from "lucide-react";
-import { Trash } from "lucide-react";
 
 export default function AddNewCat({ fetchCategories }) {
   const [addNewCategory, setAddNewCategory] = useState(false);

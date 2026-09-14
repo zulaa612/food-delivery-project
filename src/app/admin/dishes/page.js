@@ -50,7 +50,9 @@ export default function Dishes() {
     if (!deleteCat) return;
 
     try {
-      await server.delete(`/food-category/delete/${deleteCat._id}`);
+      await server.delete("/food-category/delete", {
+        data: { id: deleteCat._id },
+      });
       toast.success("Category deleted succesfully");
 
       if (selectedCat === deleteCat._id) {
