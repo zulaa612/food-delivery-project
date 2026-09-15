@@ -12,7 +12,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-
 import { Eye } from "lucide-react";
 import { EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -36,14 +35,39 @@ export default function Login() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
-  } = useForm({
+  } = useForm(LoginFormData)({
     resolver: zodResolver(loginSchema),
     mode: "onTouched",
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    try {
+      const response = await server.post("/auth/login", {
+        email: email,
+        password: data.password,
+      });
+      localStorage.setItem("user", JSON.stringify(response.data));
+      console.log("response:", response.data);
+      const result = await response.json();
+
+      if (!response.ok) {
+        if (result.errorType === "user did not found") {
+          setError("email", { message: "User not found" });
+        } else if (result.errorType === "wrong password") {
+          setError("password", {
+            password: "Wrong password. Please try again.",
+          });
+        } else {
+          setError("password", { message: result.message || "Can not login." });
+        }
+        return;
+      }
+      router.push("/admin/dishes");
+    } catch (err) {}
     console.log("data:", data);
+    console.log("Login error: ", err);
   };
 
   return (
