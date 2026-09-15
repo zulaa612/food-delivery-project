@@ -20,6 +20,7 @@ import FieldError from "./_components/field-error";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { server } from "@/app/_api/api";
 
 const loginSchema = z.object({
   email: z
@@ -37,7 +38,7 @@ export default function Login() {
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm(LoginFormData)({
+  } = useForm({
     resolver: zodResolver(loginSchema),
     mode: "onTouched",
   });
@@ -45,29 +46,29 @@ export default function Login() {
   const onSubmit = async (data) => {
     try {
       const response = await server.post("/auth/login", {
-        email: email,
+        email: data.email,
         password: data.password,
       });
       localStorage.setItem("user", JSON.stringify(response.data));
-      console.log("response:", response.data);
-      const result = await response.json();
-
-      if (!response.ok) {
-        if (result.errorType === "user did not found") {
-          setError("email", { message: "User not found" });
-        } else if (result.errorType === "wrong password") {
-          setError("password", {
-            password: "Wrong password. Please try again.",
-          });
-        } else {
-          setError("password", { message: result.message || "Can not login." });
-        }
-        return;
-      }
       router.push("/admin/dishes");
-    } catch (err) {}
-    console.log("data:", data);
-    console.log("Login error: ", err);
+      console.log("response:", response.data);
+    } catch (error) {
+      console.log("data:", data);
+      console.log("Login error: ", error);
+
+      const errorData = error.response?.data;
+      const errorType = errorData?.errorType;
+
+      if (errorType === "user did not found") {
+        setError("email", { message: "User did not found" });
+      } else if (errorType === "wrong password") {
+        setError("password", { message: "Wrong password. Please try again." });
+      } else {
+        setError("password", {
+          message: errorData?.message || "Can not login.",
+        });
+      }
+    }
   };
 
   return (
