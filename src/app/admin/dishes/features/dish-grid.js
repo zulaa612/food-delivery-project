@@ -86,8 +86,8 @@ export default function DishGrid({ categories = [], selectedCat, onRefresh }) {
 
       <AddDish
         key={editDish?._id || "new-dish-modal"}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={dishesInfo}
+        onClose={() => setDishesInfo(false)}
         dishEdit={editDish}
         categories={categories}
         onRefresh={onRefresh}

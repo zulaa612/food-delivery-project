@@ -73,6 +73,10 @@ export default function AddDish({
       setIsSubmitting(false);
     }
   };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleDelete = async () => {
     if (!dishEdit) return;
@@ -84,7 +88,7 @@ export default function AddDish({
       await server.delete(`/category-dishes/delete/${dishEdit._id}`);
       toast.success("Dish deleted successfully.");
       onRefresh();
-      onclose();
+      onClose();
     } catch (err) {
       console.log("delete dish errrorr:", err);
       toast.error("Failed to delete dish.");
@@ -102,7 +106,7 @@ export default function AddDish({
           </h2>
           <button
             onClick={onClose}
-            className="p-1 text-gray-400 hover:text-black"
+            className="p-1 text-gray-400 hover:text-black cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -119,7 +123,7 @@ export default function AddDish({
               name="dishName"
               value={formData.dishName}
               onChange={handleChange}
-              placeholder="e.g. Brie Crostini Appetizer"
+              placeholder="Dish name..."
               className="w-full border rounded-xl p-2.5 text-sm outline-none focus:ring-1 focus:ring-red-400"
             />
           </div>
@@ -153,7 +157,7 @@ export default function AddDish({
               value={formData.ingredients}
               onChange={handleChange}
               rows={3}
-              placeholder="Fluffy pancakes stacked with fruits..."
+              placeholder="Ingredients..."
               className="w-full border rounded-xl p-2.5 text-sm outline-none focus:ring-1 focus:ring-red-400 resize-none"
             />
           </div>
@@ -165,11 +169,11 @@ export default function AddDish({
             </label>
             <input
               type="number"
-              step="0.01"
+              
               name="price"
               value={formData.price}
               onChange={handleChange}
-              placeholder="12.99"
+              placeholder="Price..."
               className="w-full border rounded-xl p-2.5 text-sm outline-none focus:ring-1 focus:ring-red-400"
             />
           </div>
