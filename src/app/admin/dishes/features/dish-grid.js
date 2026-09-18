@@ -1,7 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
-import { Pencil } from "lucide-react";
+import { Plus, Pencil } from "lucide-react";
 import { Button } from "@base-ui/react";
 import Image from "next/image";
 import { useState } from "react";
@@ -10,14 +9,17 @@ import AddDish from "./add-new-dish";
 export default function DishGrid({ categories = [], selectedCat, onRefresh }) {
   const [dishesInfo, setDishesInfo] = useState(false);
   const [editDish, setEditDish] = useState(null);
+  const [selectedCatId, setSelectedCatId] = useState(null);
 
-  const handleOpenDishesInfp = (catId) => {
+  const handleOpenDishesInfo = (catId) => {
     setEditDish(null);
+    setSelectedCatId(catId);
     setDishesInfo(true);
   };
 
   const handleOpenEdit = (dish) => {
     setEditDish(dish);
+    setSelectedCatId(dish.categoryId);
     setDishesInfo(true);
   };
 
@@ -31,52 +33,58 @@ export default function DishGrid({ categories = [], selectedCat, onRefresh }) {
       {filteredCategories.map((category) => (
         <div
           key={category._id}
-          className="bg-white rounded-2xl p-6 border border-gray-300 "
+          className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm"
         >
-          <span className="font-semibold text-xl">
+          <h2 className="font-bold text-xl text-gray-900 mb-4">
             {category.categoryName} ({category.dishes?.length || 0})
-          </span>
+          </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4 ">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <Button
-              onClick={() => handleOpenDishesInfp(category._id)}
-              className="border-2 border-dashed border-red-500 hover:border-red-950 rounded-2xl w-[270.75px] h-60.25 flex flex-col items-center justify-center gap-3 text-center"
+              onClick={() => handleOpenDishesInfo(category._id)}
+              className="border-2 border-dashed border-red-300 hover:border-red-400 bg-red-50/20 rounded-2xl h-60 flex flex-col items-center justify-center gap-3 text-center cursor-pointer transition"
             >
-              <div className="w-11 h-11 rounded-full bg-red-400 flex items-center justify-center text-white cursor-pointer">
-                <Plus />
+              <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white">
+                <Plus className="w-5 h-5" />
               </div>
-              <span>Add new Dish to {category.categoryName}</span>
+              <span className="text-sm font-medium text-gray-700">
+                Add new Dish to {category.categoryName}
+              </span>
             </Button>
 
             {category.dishes?.map((dish) => (
               <div
                 key={dish._id}
-                className="border border-gray-200 rounded-2xl p-4 flex flex-col justify-between shadow-xs hover:shadow-md transition-shadow relative bg-white"
+                className="border border-gray-100 rounded-2xl p-3 flex flex-col justify-between shadow-xs hover:shadow-md transition-shadow relative bg-white"
               >
                 <div>
-                  <div className="relative w-59.75 h-32.5 rounded-xl  bg-gray-200">
+                  <div className="relative w-full h-36 rounded-xl overflow-hidden bg-gray-100">
                     <Image
                       src={dish.image || "/placeholder.png"}
-                      alt={dish.dishName}
+                      alt={dish.dishName || "dish"}
                       fill
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover rounded-xl"
                     />
-                    <Button
+                    <button
                       onClick={() => handleOpenEdit(dish)}
-                      className="absolute rounded-full bg-white cursor-pointer"
+                      className="absolute top-2 right-2 p-2 rounded-full bg-white text-red-500 shadow hover:bg-gray-50 cursor-pointer"
                     >
-                      <Pencil className="text-red-500" />
-                    </Button>
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
                   </div>
 
-                  <div className="flex justify-between items-start mb-2">
-                    <span className="font-medium text-red-400 text-sm">
+                  <div className="flex justify-between items-start mt-3 mb-1">
+                    <span className="font-semibold text-red-500 text-sm line-clamp-1">
                       {dish.dishName}
                     </span>
-                    <span className="font-mdeium text-xs">${dish.price}</span>
+                    <span className="font-bold text-xs text-gray-900">
+                      ${dish.price}
+                    </span>
                   </div>
 
-                  <span className="text-black ">{dish.ingredients}</span>
+                  <p className="text-gray-500 text-xs line-clamp-2">
+                    {dish.ingredients}
+                  </p>
                 </div>
               </div>
             ))}
@@ -85,10 +93,10 @@ export default function DishGrid({ categories = [], selectedCat, onRefresh }) {
       ))}
 
       <AddDish
-        key={editDish?._id || "new-dish-modal"}
         isOpen={dishesInfo}
         onClose={() => setDishesInfo(false)}
         dishEdit={editDish}
+        selectedCatId={selectedCatId}
         categories={categories}
         onRefresh={onRefresh}
       />

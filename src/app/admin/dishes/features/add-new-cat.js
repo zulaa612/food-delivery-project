@@ -94,3 +94,6 @@ export default function AddNewCat({ fetchCategories }) {
     </div>
   );
 }
+
+
+
