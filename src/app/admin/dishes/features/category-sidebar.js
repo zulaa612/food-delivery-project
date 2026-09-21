@@ -3,14 +3,12 @@
 import { LayoutDashboard } from "lucide-react";
 import Image from "next/image";
 import { Truck } from "lucide-react";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
-import Dishes from "../page";
-import Orders from "../../orders/page";
+
 
 export default function Sidebar() {
-  const [activeTab, setActiveTab] = useState("foodMenu");
+
 
   return (
     <div className="flex h-screen">
@@ -61,11 +59,6 @@ export default function Sidebar() {
           </Button>
         </div>
       </aside>
-
-      <div className="flex-1 p-8 bg-gray-50 ">
-        {activeTab === "foodMenu" && <Dishes />}
-        {activeTab === "orders" && <Orders />}
-      </div>
     </div>
   );
 }

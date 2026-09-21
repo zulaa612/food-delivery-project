@@ -22,6 +22,7 @@ export default function AddDish({
     dishEdit,
     selectedCatId,
   });
+
   const [formData, setFormData] = useState({
     dishName: dishEdit?.dishName || "",
     category: dishEdit?.categoryId || selectedCatId || "",
@@ -29,6 +30,7 @@ export default function AddDish({
     price: dishEdit?.price || "",
     image: dishEdit?.image || "",
   });
+
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
 
@@ -99,7 +101,7 @@ export default function AddDish({
 
       const payload = {
         dishName: formData.dishName,
-        categoryId: formData.category || selectedCatId,
+        category: formData.category || selectedCatId,
         ingredients: formData.ingredients,
         price: Number(formData.price),
         image: imageUrl,
@@ -109,7 +111,7 @@ export default function AddDish({
         await server.put(`/category-dishes/update/${dishEdit._id}`, payload);
         toast.success("Dish updated successfully.");
       } else {
-        await server.post("/category-dishes/create", payload);
+        await server.post("/add-dish/create", payload);
         toast.success("Dish created successfully.");
       }
 
@@ -259,7 +261,8 @@ export default function AddDish({
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-black text-white hover:bg-zinc-800 rounded-xl px-6 py-2.5 cursor-pointer text-sm font-medium"
+              className="bg-black text-white  
+              hover:bg-zinc-800 rounded-xl px-6 py-2.5 cursor-pointer text-sm font-medium"
             >
               {isSubmitting ? "Saving..." : dishEdit ? "Save dish" : "Add Dish"}
             </Button>
