@@ -6,10 +6,7 @@ import { Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
 
-
-export default function Sidebar() {
-
-
+export default function Sidebar({ activeTab, setActiveTab }) {
   return (
     <div className="flex h-screen">
       <aside className="w-51.25 h-screen bg-white border-r-4 border-gray-100 flex flex-col p-5.5">

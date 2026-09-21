@@ -20,6 +20,7 @@ export default function AddNewCat({ fetchCategories }) {
   const handleAddNewCategory = async (e) => {
     e.preventDefault();
     if (!newCategoryName.trim()) return;
+    setIsSubmitting(true);
     try {
       const response = await server.post("/food-category/create", {
         categoryName: newCategoryName,
@@ -39,6 +40,9 @@ export default function AddNewCat({ fetchCategories }) {
       ));
     } catch (err) {
       console.log("error:", err);
+      toast.error(err?.response?.data?.message || "fetch server fail");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -94,6 +98,3 @@ export default function AddNewCat({ fetchCategories }) {
     </div>
   );
 }
-
-
-

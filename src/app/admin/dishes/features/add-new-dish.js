@@ -47,13 +47,13 @@ export default function AddDish({
     body.append("file", file);
     body.append("upload_preset", upload_preset);
 
-    const data = axios.post(
+    const response = await axios.post(
       `
-      https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload
+      https://api.cloudinary.com/v1_1/${cloudName}/image/upload
       `,
       body,
     );
-    console.log(data);
+    console.log(response.data.url);
   };
   if (
     prevProps.isOpen !== isOpen ||

@@ -1,8 +1,9 @@
+"use client";
 import Sidebar from "./dishes/features/category-sidebar";
-import { Avatar } from "@base-ui/react";
 import { Toaster } from "sonner";
 import Dishes from "./dishes/page";
 import Orders from "./orders/page";
+import { useState } from "react";
 
 export default function Admin() {
   const [activeTab, setActiveTab] = useState("foodMenu");
