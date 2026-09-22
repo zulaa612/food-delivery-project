@@ -3,13 +3,37 @@
 import { Plus, Pencil } from "lucide-react";
 import { Button } from "@base-ui/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddDish from "./add-new-dish";
+import { server } from "@/app/_api/api";
 
 export default function DishGrid({ categories = [], selectedCat, onRefresh }) {
   const [dishesInfo, setDishesInfo] = useState(false);
   const [editDish, setEditDish] = useState(null);
   const [selectedCatId, setSelectedCatId] = useState(null);
+  const [dishes, setDishes] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchDishes = async () => {
+      try {
+        const response = await server.get("/add-dish/get");
+        if (isMounted) {
+          setDishes(response?.data?.CategoryDish || []);
+        }
+        console.log(response.data.CategoryDish);
+      } catch (err) {
+        console.log("Error fetching dishes:", err);
+      }
+    };
+
+    fetchDishes();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleOpenDishesInfo = (catId) => {
     setEditDish(null);
@@ -52,7 +76,7 @@ export default function DishGrid({ categories = [], selectedCat, onRefresh }) {
               </span>
             </Button>
 
-            {category.dishes?.map((dish) => (
+            {dishes?.map((dish) => (
               <div
                 key={dish._id}
                 className="border border-gray-100 rounded-2xl p-3 flex flex-col justify-between shadow-xs hover:shadow-md transition-shadow relative bg-white"
@@ -91,8 +115,8 @@ export default function DishGrid({ categories = [], selectedCat, onRefresh }) {
           </div>
         </div>
       ))}
-
       <AddDish
+        key={editDish?._id || selectedCatId || "new-dish"}
         isOpen={dishesInfo}
         onClose={() => setDishesInfo(false)}
         dishEdit={editDish}

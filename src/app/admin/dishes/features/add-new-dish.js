@@ -5,6 +5,7 @@ import { X, Trash2, Image as ImageIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import axios from "axios";
 
 const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 const upload_preset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
@@ -17,12 +18,6 @@ export default function AddDish({
   selectedCatId = null,
   onRefresh,
 }) {
-  const [prevProps, setPrevProps] = useState({
-    isOpen,
-    dishEdit,
-    selectedCatId,
-  });
-
   const [formData, setFormData] = useState({
     dishName: dishEdit?.dishName || "",
     category: dishEdit?.categoryId || selectedCatId || "",
@@ -33,53 +28,34 @@ export default function AddDish({
 
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
-
-  const pickFile = (event) => {
-    const image = event.target.files[0];
-    console.log(image);
-    setFile(image);
-
-    setPreview(URL.createObjectURL(image));
-  };
-
-  const upload = async () => {
-    const body = new FormData();
-    body.append("file", file);
-    body.append("upload_preset", upload_preset);
-
-    const response = await axios.post(
-      `
-      https://api.cloudinary.com/v1_1/${cloudName}/image/upload
-      `,
-      body,
-    );
-    console.log(response.data.url);
-  };
-  if (
-    prevProps.isOpen !== isOpen ||
-    prevProps.dishEdit !== dishEdit ||
-    prevProps.selectedCatId !== selectedCatId
-  ) {
-    setPrevProps({ isOpen, dishEdit, selectedCatId });
-    if (isOpen) {
-      setFormData({
-        dishName: dishEdit?.dishName || "",
-        category: dishEdit?.categoryId || selectedCatId || "",
-        ingredients: dishEdit?.ingredients || "",
-        price: dishEdit?.price || "",
-        image: dishEdit?.image || "",
-      });
-      setFile(null);
-    }
-  }
-
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   if (!isOpen) return null;
 
   const currentCat = categories.find(
     (cat) => cat._id === (formData.category || selectedCatId),
   );
+
+  const pickFile = (event) => {
+    const image = event.target.files?.[0];
+    if (image) {
+      setFile(image);
+      setPreview(URL.createObjectURL(image));
+    }
+  };
+
+  const uploadImageToCloudinary = async () => {
+    if (!file) return formData.image;
+
+    const body = new FormData();
+    body.append("file", file);
+    body.append("upload_preset", upload_preset);
+
+    const res = await axios.post(
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      body,
+    );
+    return res.data.secure_url || res.data.url;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -89,8 +65,15 @@ export default function AddDish({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const targetCategoryId = formData.category || selectedCatId;
+
     if (!formData.dishName || !formData.price) {
-      toast.error("Please provide required fields (name, price)");
+      toast.error("Please fill in required fields (name, price)");
+      return;
+    }
+
+    if (!targetCategoryId) {
+      toast.error("Please select a category.");
       return;
     }
 
@@ -98,10 +81,14 @@ export default function AddDish({
 
     try {
       let imageUrl = formData.image;
+      if (file) {
+        imageUrl = await uploadImageToCloudinary();
+      }
 
       const payload = {
         dishName: formData.dishName,
-        category: formData.category || selectedCatId,
+        category: targetCategoryId,
+        categoryId: targetCategoryId,
         ingredients: formData.ingredients,
         price: Number(formData.price),
         image: imageUrl,
@@ -112,13 +99,14 @@ export default function AddDish({
         toast.success("Dish updated successfully.");
       } else {
         await server.post("/add-dish/create", payload);
+
         toast.success("Dish created successfully.");
       }
 
       onRefresh?.();
       onClose();
     } catch (err) {
-      console.log("create dish error", err);
+      console.error("Dish submit error:", err);
       toast.error(
         dishEdit ? "Failed to update dish." : "Failed to create dish.",
       );
@@ -139,7 +127,7 @@ export default function AddDish({
       onRefresh?.();
       onClose();
     } catch (err) {
-      console.log("delete dish error:", err);
+      console.error("Delete dish error:", err);
       toast.error("Failed to delete dish.");
     } finally {
       setIsSubmitting(false);
@@ -229,13 +217,9 @@ export default function AddDish({
                 />
               ) : (
                 <div className="flex flex-col items-center justify-center py-4">
-                  <button
-                    type="button"
-                    onClick={upload}
-                    className="p-2 rounded-lg text-gray-500 mb-1"
-                  >
+                  <div className="p-2 rounded-lg text-gray-500 mb-1">
                     <ImageIcon className="w-5 h-5 text-gray-400" />
-                  </button>
+                  </div>
                   <span className="text-xs font-medium text-gray-600 text-center">
                     {file ? file.name : "Choose a file or drag & drop it here"}
                   </span>
@@ -261,8 +245,7 @@ export default function AddDish({
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-black text-white  
-              hover:bg-zinc-800 rounded-xl px-6 py-2.5 cursor-pointer text-sm font-medium"
+              className="bg-black text-white hover:bg-zinc-800 rounded-xl px-6 py-2.5 cursor-pointer text-sm font-medium"
             >
               {isSubmitting ? "Saving..." : dishEdit ? "Save dish" : "Add Dish"}
             </Button>
