@@ -61,7 +61,7 @@ export default function Dishes() {
       await reloadCategories();
     } catch (err) {
       console.log("Deleting category error:", err);
-      toast.error("Could not delet this category");
+      toast.error("Could not delete this category");
     } finally {
       setDeleteCat(null);
     }

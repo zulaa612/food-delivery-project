@@ -4,10 +4,12 @@ import { useState } from "react";
 import StepOne from "./_features/StepOne";
 import StepTwo from "./_features/StepTwo";
 import { server } from "@/app/_api/api";
+import { useRouter } from "next/navigation";
 
 export default function Signup() {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
+  const router = useRouter();
 
   const handleStepOneNext = (email) => {
     setEmail(email);
@@ -24,9 +26,10 @@ export default function Signup() {
         password: data.password,
       });
 
-      localStorage.setItem("user", JSON.stringify(response.data));
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      router.push("/admin");
       console.log("response:", response.data);
-      return response.data;
     } catch (err) {
       console.log("error:", err);
       throw err;
