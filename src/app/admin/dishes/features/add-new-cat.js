@@ -36,7 +36,7 @@ export default function AddNewCat({ fetchCategories }) {
         <div className="flex items-center gap-2 bg-gray-900 text-white px-4 py-3 rounded-lg shadow-lg text-sm font-medium border border-gray-800">
           <Check className="w-4 h-4 text-white" />
           <span>New Category is being added to the menu</span>
-        </div>
+      </div>                                                                                                        
       ));
     } catch (err) {
       console.log("error:", err);

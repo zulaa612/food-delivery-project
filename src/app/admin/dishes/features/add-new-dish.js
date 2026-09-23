@@ -2,7 +2,7 @@
 
 import { server } from "@/app/_api/api";
 import { X, Trash2, Image as ImageIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import axios from "axios";
@@ -20,7 +20,12 @@ export default function AddDish({
 }) {
   const [formData, setFormData] = useState({
     dishName: dishEdit?.dishName || "",
-    category: dishEdit?.categoryId || selectedCatId || "",
+    category:
+      dishEdit?.category?._id ||
+      dishEdit?.category ||
+      selectedCatId ||
+      categories[0]?._id ||
+      "",
     ingredients: dishEdit?.ingredients || "",
     price: dishEdit?.price || "",
     image: dishEdit?.image || "",
@@ -29,6 +34,7 @@ export default function AddDish({
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   if (!isOpen) return null;
 
   const currentCat = categories.find(
