@@ -10,6 +10,7 @@ export const server = axios.create({
 server.interceptors.request.use((config) => {
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  console.log(localStorage.getItem("token"));
   if (token) {
     config.headers.Authorization = `Bearer ${token.trim()}`;
   } else {

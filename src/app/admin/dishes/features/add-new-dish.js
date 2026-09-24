@@ -2,7 +2,7 @@
 
 import { server } from "@/app/_api/api";
 import { X, Trash2, Image as ImageIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import axios from "axios";
@@ -28,11 +28,11 @@ export default function AddDish({
       "",
     ingredients: dishEdit?.ingredients || "",
     price: dishEdit?.price || "",
-    image: dishEdit?.image || "",
+    image: dishEdit?.imageUrl || "",
   });
 
   const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState("");
+  const [preview, setPreview] = useState(dishEdit?.imageUrl || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen) return null;
@@ -94,18 +94,16 @@ export default function AddDish({
       const payload = {
         dishName: formData.dishName,
         category: targetCategoryId,
-        categoryId: targetCategoryId,
         ingredients: formData.ingredients,
-        price: Number(formData.price),
-        image: imageUrl,
+        price: formData.price,
+        imageUrl: imageUrl,
       };
 
       if (dishEdit) {
-        await server.put(`/category-dishes/update/${dishEdit._id}`, payload);
+        await server.put(`/add-dish/update/${dishEdit._id}`);
         toast.success("Dish updated successfully.");
       } else {
         await server.post("/add-dish/create", payload);
-
         toast.success("Dish created successfully.");
       }
 
@@ -123,12 +121,13 @@ export default function AddDish({
 
   const handleDelete = async () => {
     if (!dishEdit) return;
+    console.log("Deleting dish id:", dishEdit._id);
 
     if (!confirm("Are you sure you want to delete this dish?")) return;
     setIsSubmitting(true);
 
     try {
-      await server.delete(`/category-dishes/delete/${dishEdit._id}`);
+      await server.delete(`/add-dish/delete/${dishEdit._id}`);
       toast.success("Dish deleted successfully.");
       onRefresh?.();
       onClose();
@@ -216,6 +215,7 @@ export default function AddDish({
                 className="hidden"
               />
               {preview ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={preview}
                   alt="Preview"
