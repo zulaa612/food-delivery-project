@@ -5,8 +5,10 @@ import StepOne from "./_features/StepOne";
 import StepTwo from "./_features/StepTwo";
 import { server } from "@/app/_api/api";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/provider/authprovider";
 
 export default function Signup() {
+  const { signup } = useAuth();
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const router = useRouter();

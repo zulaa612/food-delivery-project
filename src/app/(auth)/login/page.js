@@ -21,6 +21,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { server } from "@/app/_api/api";
+import { useAuth } from "@/app/provider/authprovider";
 
 const loginSchema = z.object({
   email: z
@@ -30,6 +31,7 @@ const loginSchema = z.object({
 });
 
 export default function Login() {
+  const { login } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 

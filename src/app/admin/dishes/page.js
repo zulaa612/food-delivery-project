@@ -11,6 +11,7 @@ export default function Dishes() {
   const [categories, setCategories] = useState([]);
   const [selectedCat, setSelectedCat] = useState("all");
   const [loading, setLoading] = useState(true);
+  const [dishes, setDishes] = useState([]);
 
   const [deleteCat, setDeleteCat] = useState(null);
 
@@ -19,9 +20,14 @@ export default function Dishes() {
 
     const fetchCategories = async () => {
       try {
-        const response = await server.get("/food-category/get");
+        const [catRes, dishRes] = await Promise.all([
+          server.get("/food-category/get"),
+          server.get("/add-dish/get"),
+        ]);
+
         if (isMounted) {
-          setCategories(response?.data?.FoodCategories || []);
+          setCategories(catRes?.data?.FoodCategories || []);
+          setDishes(dishRes?.data.CategoryDish || []);
         }
       } catch (err) {
         console.log("Error fetching categories;", err);
@@ -91,37 +97,44 @@ export default function Dishes() {
             >
               <span>All Dishes</span>
               <span className="bg-black text-white text-xs px-2 py-0.5 rounded-full font-semibold">
-                {categories.dishes?.length || 0}
+                {categories.length || 0}
               </span>
             </button>
 
             {/* Category Buttons */}
-            {categories.map((category) => (
-              <div
-                key={category._id}
-                onClick={() => setSelectedCat(category._id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all cursor-pointer ${
-                  selectedCat === category._id
-                    ? "border-red-500 bg-white text-gray-900"
-                    : "border-gray-300 bg-white text-gray-700 hover:border-gray-400"
-                }`}
-              >
-                <span>{category.categoryName}</span>
-                <span className="bg-black text-white text-xs px-2 py-0.5 rounded-full font-semibold">
-                  {category.dishes?.length || 0}
-                </span>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setDeleteCat(category);
-                  }}
-                  className="ml-1 p-0.5 rounded-full hover:text-red-500 hover:bg-red-50 transition-colors"
+            {categories.map((category) => {
+              const dishCount = dishes.filter(
+                (dish) =>
+                  dish.categoryId === category._id ||
+                  dish.category === category._id,
+              ).length;
+              return (
+                <div
+                  key={category._id}
+                  onClick={() => setSelectedCat(category._id)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all cursor-pointer ${
+                    selectedCat === category._id
+                      ? "border-red-500 bg-white text-gray-900"
+                      : "border-gray-300 bg-white text-gray-700 hover:border-gray-400"
+                  }`}
                 >
-                  <X className="w-3.5 h-3.5 cursor-pointer" />
-                </button>
-              </div>
-            ))}
+                  <span>{category.categoryName}</span>
+                  <span className="bg-black text-white text-xs px-2 py-0.5 rounded-full font-semibold">
+                    {dishCount}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDeleteCat(category);
+                    }}
+                    className="ml-1 p-0.5 rounded-full hover:text-red-500 hover:bg-red-50 transition-colors"
+                  >
+                    <X className="w-3.5 h-3.5 cursor-pointer" />
+                  </button>
+                </div>
+              );
+            })}
 
             <AddNewCat reloadCategories={reloadCategories} />
           </div>
