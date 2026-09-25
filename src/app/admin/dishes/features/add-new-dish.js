@@ -100,7 +100,7 @@ export default function AddDish({
       };
 
       if (dishEdit) {
-        await server.put(`/add-dish/update/${dishEdit._id}`, payload);
+        await server.put(`/add-dish/update/${dishEdit._id}`,);
         toast.success("Dish updated successfully.");
       } else {
         await server.post("/add-dish/create", payload);
