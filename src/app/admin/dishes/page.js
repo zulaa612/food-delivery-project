@@ -6,14 +6,14 @@ import AddNewCat from "./features/add-new-cat";
 import DishGrid from "./features/dish-grid";
 import { X } from "lucide-react";
 import { toast } from "sonner";
+import { useCategory } from "@/app/provider/categoryProvider";
 
 export default function Dishes() {
-  const [categories, setCategories] = useState([]);
   const [selectedCat, setSelectedCat] = useState("all");
-  const [loading, setLoading] = useState(true);
-  const [dishes, setDishes] = useState([]);
 
   const [deleteCat, setDeleteCat] = useState(null);
+
+  const { categories, dishes, loading, fetchCategories } = useCategory();
 
   useEffect(() => {
     let isMounted = true;

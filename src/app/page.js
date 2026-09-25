@@ -1,5 +1,6 @@
 "use client";
 
+import FoodGrid from "./(main)/features/food-grid";
 import HeaderSection from "./(main)/features/header";
 import Image from "next/image";
 
@@ -17,6 +18,7 @@ export default function HomePage() {
           width={1440}
         />
       </div>
+      <FoodGrid />
     </div>
   );
 }

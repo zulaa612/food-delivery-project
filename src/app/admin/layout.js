@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import Dishes from "./dishes/page";
 import Orders from "./orders/page";
 import { useState } from "react";
+import { CategoryProvider } from "../provider/categoryProvider";
 
 export default function Admin() {
   const [activeTab, setActiveTab] = useState("foodMenu");
@@ -16,6 +17,7 @@ export default function Admin() {
         {activeTab === "settings" && <div>Settings page</div>}
       </main>
       <Toaster position="top-center" />
+      <CategoryProvider />
     </div>
   );
 }
