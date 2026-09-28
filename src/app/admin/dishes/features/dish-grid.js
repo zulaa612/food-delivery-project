@@ -112,7 +112,7 @@ export default function DishGrid({ categories = [], selectedCat, onRefresh }) {
                         {dish.dishName}
                       </span>
                       <span className="font-bold text-xs text-gray-900">
-                        ${dish.price}
+                        {dish.price}
                       </span>
                     </div>
                     <p className="text-gray-500 text-xs line-clamp-2">

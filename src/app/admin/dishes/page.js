@@ -15,43 +15,6 @@ export default function Dishes() {
 
   const { categories, dishes, loading, fetchCategories } = useCategory();
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchCategories = async () => {
-      try {
-        const [catRes, dishRes] = await Promise.all([
-          server.get("/food-category/get"),
-          server.get("/add-dish/get"),
-        ]);
-
-        if (isMounted) {
-          setCategories(catRes?.data?.FoodCategories || []);
-          setDishes(dishRes?.data.CategoryDish || []);
-        }
-      } catch (err) {
-        console.log("Error fetching categories;", err);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
-    fetchCategories();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  const reloadCategories = async () => {
-    try {
-      const response = await server.get("/food-category/get");
-      setCategories(response?.data?.FoodCategories || []);
-    } catch (err) {
-      console.log("Error reload categories:", err);
-    }
-  };
-
   const handleDeleteCategory = async () => {
     if (!deleteCat) return;
 
@@ -64,7 +27,7 @@ export default function Dishes() {
       if (selectedCat === deleteCat._id) {
         setSelectedCat("all");
       }
-      await reloadCategories();
+    
     } catch (err) {
       console.log("Deleting category error:", err);
       toast.error("Could not delete this category");
@@ -136,7 +99,7 @@ export default function Dishes() {
               );
             })}
 
-            <AddNewCat reloadCategories={reloadCategories} />
+            <AddNewCat  />
           </div>
         )}
       </div>
@@ -181,3 +144,6 @@ export default function Dishes() {
     </div>
   );
 }
+
+
+
