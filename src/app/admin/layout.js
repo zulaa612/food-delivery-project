@@ -5,7 +5,6 @@ import Dishes from "./dishes/page";
 import Orders from "./orders/page";
 import { useState } from "react";
 
-
 export default function Admin() {
   const [activeTab, setActiveTab] = useState("foodMenu");
   return (

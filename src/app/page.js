@@ -7,16 +7,15 @@ import Image from "next/image";
 
 export default function HomePage() {
   return (
-    <div>
+    <div className="overflow-hidden">
       <HeaderSection />
       <div className="w-full">
         <Image
           src="/pic/hero.png"
           alt="HeroPic"
-          sizes="100vw"
-          className="w-full h-auto object-cover "
+          width={1920}
           height={570}
-          width={1440}
+          sizes="100vw"
         />
       </div>
       <FoodGrid />

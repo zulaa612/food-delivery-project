@@ -8,7 +8,7 @@ export default function Footer() {
   const { categories } = useCategory();
 
   return (
-    <footer className="bg-black text-white w-full pt-0 pb-12 flex flex-col items-center">
+    <footer className="bg-black text-white w-screen pt-0 pb-12 flex flex-col items-center">
       {/* Banner */}
       <div className="bg-red-500 w-full py-6 flex items-center overflow-hidden whitespace-nowrap mb-12">
         <div className="inline-flex gap-8 font-bold text-3xl whitespace-nowrap pl-12">

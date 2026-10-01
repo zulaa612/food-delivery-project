@@ -13,7 +13,7 @@ export default function Dishes() {
 
   const [deleteCat, setDeleteCat] = useState(null);
 
-  const { categories, dishes, loading, fetchCategories } = useCategory();
+  const { categories, dishes, loading } = useCategory();
 
   const handleDeleteCategory = async () => {
     if (!deleteCat) return;
@@ -144,6 +144,7 @@ export default function Dishes() {
     </div>
   );
 }
+
 
 
 
