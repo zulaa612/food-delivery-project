@@ -3,9 +3,28 @@
 import { useCategory } from "@/app/provider/categoryProvider";
 import Image from "next/image";
 import { ImageIcon, Plus } from "lucide-react";
+import { useState } from "react";
+import AddressModal from "../components/adress-modal";
+import { server } from "@/app/_api/api";
+import { useAddress } from "@/app/provider/addressProvider";
 
 export default function CategoryTab() {
-  const { categories, dishes, loading } = useCategory();
+  const { categories, dishes, loading, addToCart } = useCategory();
+  const { address } = useAddress();
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+
+  const logIn = Array.isArray(address) ? address.length > 0 : Boolean(address);
+
+  const handleAdd = (dish) => {
+    if (!logIn) {
+      setIsAddressModalOpen(true);
+      return;
+    }
+
+    if (addToCart) {
+      addToCart(dish);
+    }
+  };
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-12 flex flex-col gap-12">
@@ -44,7 +63,7 @@ export default function CategoryTab() {
                       <button
                         onClick={() => handleAdd(dish)}
                         className="absolute bottom-2 right-2 w-8 h-8 flex items-center justify-center rounded-full bg-white text-red-500 shadow hover:bg-gray-50 cursor-pointer"
-                        aria-label={`Add {dish.dishName}`}
+                        aria-label={`Add ${dish.dishName}`}
                       >
                         <Plus />
                       </button>
@@ -72,6 +91,11 @@ export default function CategoryTab() {
           </section>
         ))
       )}
+
+      <AddressModal
+        isOpen={isAddressModalOpen}
+        onClose={() => setIsAddressModalOpen(false)}
+      />
     </div>
   );
 }

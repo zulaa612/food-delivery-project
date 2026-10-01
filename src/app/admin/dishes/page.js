@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { server } from "@/app/_api/api";
 import AddNewCat from "./features/add-new-cat";
 import DishGrid from "./features/dish-grid";
@@ -27,7 +27,6 @@ export default function Dishes() {
       if (selectedCat === deleteCat._id) {
         setSelectedCat("all");
       }
-    
     } catch (err) {
       console.log("Deleting category error:", err);
       toast.error("Could not delete this category");
@@ -99,7 +98,7 @@ export default function Dishes() {
               );
             })}
 
-            <AddNewCat  />
+            <AddNewCat />
           </div>
         )}
       </div>
@@ -144,7 +143,3 @@ export default function Dishes() {
     </div>
   );
 }
-
-
-
-
